@@ -5,17 +5,17 @@ layout: post
 categories: media
 ---
 
-![Cover](/Users/yonwang/Desktop/Baseline%20Hazard/Figure%202%20(Smooth).jpeg)
+![Cover](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Figure%202%20(Smooth).jpeg)
 
-In this tutorial, we will delve into depicting the estimated **(cumulative) baseline hazard functions** in R using the `ggplot2` package. As we observe, a Cox proportional hazard regression comprises two components: **a non-specific baseline hazard function of time and a linear predictor in exponential form**:
+In this tutorial, we will delve into depicting the estimated __(cumulative) baseline hazard functions__ in R using the `ggplot2` package. As we observe, a Cox proportional hazard regression comprises two components: __a non-specific baseline hazard function of time and a linear predictor in exponential form__:
 
 $$ \lambda_{i}(t) = \lambda_{0}(t)e^{X_{i}(t) \beta}, $$
 
-where $$ i $$ is the index for a unique patient, $$ t $$ represents a specific timepoint, $$ \lambda_{0}(t) $$ is the non-specific baseline hazard function over time, $$ X_{i}(t) $$ includes covariates for patient $$ i $$ at time $$ t $$, and $$ \beta $$ is a vector of coefficients. Typically, estimated coefficients can be obtained using the `coxph()` function in the `survival` package. However, procedures to obtain $$ \lambda_{0}(t) $$ are less commonly discussed. This is because **Cox regression is a semi-parametric model** that incorporates **a non-parametric component for the baseline hazard function**, making it unspecified. Additionally, the estimation of the baseline hazard function is often challenging, and its statistical inference remains mysterious in the cutting-edge research of survival analysis. In comparison, estimating the cumulative (or integrated) baseline hazard function is generally easier than estimating the baseline hazard function. Therefore, we will start our illustration by focusing on the estimation of the cumulative baseline hazard function.
+where $$ i $$ is the index for a unique patient, $$ t $$ represents a specific timepoint, $$ \lambda_{0}(t) $$ is the non-specific baseline hazard function over time, $$ X_{i}(t) $$ includes covariates for patient $$ i $$ at time $$ t $$, and $$ \beta $$ is a vector of coefficients. Typically, estimated coefficients can be obtained using the `coxph()` function in the `survival` package. However, procedures to obtain $$ \lambda_{0}(t) $$ are less commonly discussed. This is because __Cox regression is a semi-parametric model__ that incorporates __a non-parametric component for the baseline hazard function__, making it unspecified. Additionally, the estimation of the baseline hazard function is often challenging, and its statistical inference remains mysterious in the cutting-edge research of survival analysis. In comparison, estimating the cumulative (or integrated) baseline hazard function is generally easier than estimating the baseline hazard function. Therefore, we will start our illustration by focusing on the estimation of the cumulative baseline hazard function.
 
 ## 1. Estimator
 
-We begin with a non-parametric estimator, the **Nelson-Aalen estimator for the cumulative baseline hazard function**. It can be expressed as:
+We begin with a non-parametric estimator, the __Nelson-Aalen estimator for the cumulative baseline hazard function__. It can be expressed as:
 
 $$ \hat{\Lambda}(t) = \sum_{i: t_{i} \leq t} \frac{d_i}{r_{i}}, $$
 
@@ -23,7 +23,7 @@ where $$ d_i $$ is the number of events at time $$ t_{i} $$, and $$ r_{i} $$ is 
 
 $$ \hat{\Lambda}(t) = \int_{0}^{t} \frac{d \bar{N}(s)}{ \sum_{i} \bar{Y}_{i}(s)  }, $$
 
-where $$ d \bar{N}(s) $$ is the number of events occurring precisely at time $$ s $$, and $$ \bar{Y}_{i}(s) $$ is the number of patients "at risk" at time $$ s $$. Heuristically, the **Nelson-Aalen estimator is a method of moments estimator** and can be reasonably considered as a Poisson process at a short time period $$ t $$. Therefore, its estimated variance can be obtained as
+where $$ d \bar{N}(s) $$ is the number of events occurring precisely at time $$ s $$, and $$ \bar{Y}_{i}(s) $$ is the number of patients "at risk" at time $$ s $$. Heuristically, the __Nelson-Aalen estimator is a method of moments estimator__ and can be reasonably considered as a Poisson process at a short time period $$ t $$. Therefore, its estimated variance can be obtained as
 
 $$ \hat{Var}(\hat{\Lambda}) = \sum_{i: t_{i} \leq t} \frac{d_i}{r_{i}^2} $$,
 
@@ -43,7 +43,7 @@ where $$ dN_{i}(s) $$ indicates if an event happened at time $$ s $$ for a patie
 
 $$ \bar{N}(s) = \sum_{i = 1}^{n} N_{i}(s), \quad \bar{Y}_{i}(s) = \sum_{i = 1}^{n} Y_{i}(s) $$.
 
-The detailed proof involves the use of Fubini's theorem to enable the interchangeability of integration and summation, but we will omit it here. Since both estimators are designed for the cumulative (integrated) baseline hazard, if we aim to derive the baseline hazard function $$ \lambda_{0}(t) $$ from the cumulative baseline hazard $$ \Lambda(t) $$, we need to take the **stepwise discrete-time derivative for the cumulative (integrated) baseline hazard**. It is worth noting that, while this approximation may not be very precise, the associated statistical inference (i.e., asymptotics) remains somewhat mysterious. Nevertheless, it serves as an informative tool for visualizing the baseline risk of event occurrence. Sometimes, understanding the behavior of a Cox model in this context can be useful and may be used for comparisons with the incidence rate over time in lots of infectious diseases studies. Particularly, when applying time-dependent covariate or time-varying coefficient Cox models, the visualization of the baseline hazard can convey more information about the underlying behavior of the model. Now, we are moving on to the visualization part.
+The detailed proof involves the use of Fubini's theorem to enable the interchangeability of integration and summation, but we will omit it here. Since both estimators are designed for the cumulative (integrated) baseline hazard, if we aim to derive the baseline hazard function $$ \lambda_{0}(t) $$ from the cumulative baseline hazard $$ \Lambda(t) $$, we need to take the __stepwise discrete-time derivative for the cumulative (integrated) baseline hazard__. It is worth noting that, while this approximation may not be very precise, the associated statistical inference (i.e., asymptotics) remains somewhat mysterious. Nevertheless, it serves as an informative tool for visualizing the baseline risk of event occurrence. Sometimes, understanding the behavior of a Cox model in this context can be useful and may be used for comparisons with the incidence rate over time in lots of infectious diseases studies. Particularly, when applying time-dependent covariate or time-varying coefficient Cox models, the visualization of the baseline hazard can convey more information about the underlying behavior of the model. Now, we are moving on to the visualization part.
 
 ## 2. Dataset
 
@@ -51,17 +51,17 @@ The simulated dataset is designed to investigate the risk of secondary infection
 
 -   `PID`: this is an **unique identification** for each participants (string);
 
--   `start` and `stop`: these two columns represent the **counting-process-type of data**, where they together **define the observation time interval** (`start`, `end`] (numerical);
+-   `start` and `stop`: these two columns represent the __counting-process-type of data__, where they together __define the observation time interval__ (`start`, `end`] (numerical);
 
--   `rhinovirusInitial`: this is a **binary indicator for whether a rhinovirus infection is detected** at the end of an observation interval (i.e., 1 for detected and 0 for not detected) (numerical);
+-   `rhinovirusInitial`: this is a __binary indicator for whether a rhinovirus infection is detected__ at the end of an observation interval (i.e., 1 for detected and 0 for not detected) (numerical);
 
--   `secondInfection`: this is a **binary indicator for whether other viral infection is detected** at the end of an observation interval (i.e., 1 for detected and 0 for not detected) and it is the outcome variable (numerical);
+-   `secondInfection`: this is a __binary indicator for whether other viral infection is detected__ at the end of an observation interval (i.e., 1 for detected and 0 for not detected) and it is the outcome variable (numerical);
 
--   `afterInitialInfection`: this is a **time-dependent covariate** that categorizes an observational interval into four types: no secondary infections, detected secondary infection less than or equal to 90 days after the primary infection, detected secondary infection greater than 90 days but less than or equal to 180 days after the primary infection, and detected secondary infection greater than 180 days but less than or equal to 365 days after the primary infection [4 levels: `No`, `Day <= 90`, `90 < Day <= 180`, `180 < Day <= 365`] (string).
+-   `afterInitialInfection`: this is a __time-dependent covariate__ that categorizes an observational interval into four types: no secondary infections, detected secondary infection less than or equal to 90 days after the primary infection, detected secondary infection greater than 90 days but less than or equal to 180 days after the primary infection, and detected secondary infection greater than 180 days but less than or equal to 365 days after the primary infection [4 levels: `No`, `Day <= 90`, `90 < Day <= 180`, `180 < Day <= 365`] (string).
 
-![](/Users/yonwang/Desktop/Baseline%20Hazard/Dataset.png)
+![](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Dataset.png)
 
-We also assumed that these patients are part of a **prospective longitudinal cohort study**, ensuring that each patient had at least two observations over the study period. To incorporate the **calendar time scale** into the modeling procedure, the `start` and `stop` time points are adjusted relative to the study's initialized calendar date.
+We also assumed that these patients are part of a __prospective longitudinal cohort study__, ensuring that each patient had at least two observations over the study period. To incorporate the __calendar time scale__ into the modeling procedure, the `start` and `stop` time points are adjusted relative to the study's initialized calendar date.
 
 ## 3. Stepwise discrete-time derivative
 
@@ -85,13 +85,13 @@ Since there are multiple code structures that can compute the stepwise discrete-
 
 To obtain the estimated baseline hazard function, we first need to construct a Cox model in R. Essentially, we need to utilize the `Surv()` and `coxph()` functions from the `survival` package to construct a Cox model:
 
--   `Surv()`: it is a function used to **create a survival object**, typically employed as a response variable in a model formula. It requires to specify several arguments:
+-   `Surv()`: it is a function used to __create a survival object__, typically employed as a response variable in a model formula. It requires to specify several arguments:
 
     -   `time` and `time2`: they are used to specify an observation time interval, denoted as (`time`, `time2`] = (start, stop]);
 
     -   `event`: it is used to specify the status indicator, representing a binary event outcome.
 
--   `coxph()`: it is used to **fit a Cox proportional hazards regression model**.
+-   `coxph()`: it is used to __fit a Cox proportional hazards regression model__.
 
 We will utilize the `Surv()` function to set up a survival outcome and employ `coxph()` to fit a model.
 
@@ -107,7 +107,7 @@ resultTable <- cbind(Summary$coefficients, Summary$conf.int[, c('lower .95', 'up
 round(resultTable, 4)
 ```
 
-![](/Users/yonwang/Desktop/Baseline%20Hazard/Coefficient%20table.png)
+![](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Coefficient%20table.png)
 
 After fitting the Cox model, we obtained estimated hazard ratios for the time-dependent covariate to evaluate the risk of secondary infections of other viruses after the primary rhinovirus infection. We found that **the risk of secondary infections of other viruses within 90 days (HR: 0.58, 95% CI: 0.43, 0.77) and after 180 days but before 365 days (HR: 0.27, 95% CI: 0.18, 0.42) after the primary rhinovirus infection was significantly decreased compared to patients without a primary rhinovirus infection**. Although the risk of secondary infections of other viruses after 90 days but before 180 days was not statistically significant, it was still estimated as a decreased risk. These results are consistent with previous research related to the antiviral state after human rhinovirus infection. 
 
@@ -119,7 +119,7 @@ bhest <- basehaz(model)
 bhest
 ```
 
-![](/Users/yonwang/Desktop/Baseline%20Hazard/Cumulative%20hazard%20function.png)
+![](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Cumulative%20hazard%20function.png)
 
 Given that the estimated cumulative hazard is a function of time (i.e., $$ \hat{\Lambda}(t) $$), we can manually derive the stepwise discrete-time derivative for the estimated cumulative baseline hazard function (`hazard`) with respect to `time`. Utilizing our self-created derivative function from the prior section, we then applied a non-parametric smooth curve to both the estimated cumulative baseline hazard function and baseline hazard function. There are various smoothing techniques available, and for this analysis, we employed the `ss()` function from the `npreg` package. We specified different degrees of freedom (`df` argument) to create smooth splines for the two estimated baseline hazards.
 
@@ -142,7 +142,7 @@ Dt_Plot <- data.frame('Time' = baselineHazard$Time,
                       'smoothCBH' = smoothCBH$y)
 ```
 
-After combining the smooth curves with the original estimated (cumulative) baseline hazard functions using the `Time` steps, we will use this combined dataset to visualize these two functions. Initially, we visualize the raw estimated (cumulative) baseline functions without applying smoothers, using different colors. Here, since the __cumulative baseline hazard (\( \Lambda(t) \geq 0 \))__ and __baseline hazard (\(0 \geq \lambda_{0}(t) \leq 1\))__ are on different scales, we __create a second y-axis for the cumulative baseline hazard__. Therefore, it is necessary to __construct a scale factor__ to map values from the scale of cumulative hazard to the scale of baseline hazard.
+After combining the smooth curves with the original estimated (cumulative) baseline hazard functions using the `Time` steps, we will use this combined dataset to visualize these two functions. Initially, we visualize the raw estimated (cumulative) baseline functions without applying smoothers, using different colors. Here, since the __cumulative baseline hazard__ ($$ \Lambda(t) \geq 0 $$) and __baseline hazard__ ($$ 0 \geq \lambda_{0}(t) \leq 1 $$) are on different scales, we __create a second y-axis for the cumulative baseline hazard__. Therefore, it is necessary to __construct a scale factor__ to map values from the scale of cumulative hazard to the scale of baseline hazard.
 
 ```{r}
 # Set up color for smooth curves
@@ -177,7 +177,7 @@ p <-
 p
 ```
 
-![](/Users/yonwang/Desktop/Baseline%20Hazard/Figure 1 (Raw).jpeg)
+![](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Figure%201%20(Raw).jpeg)
 
 In this figure, the estimated baseline hazard points are depicted in blue using the left y-axis, the estimated cumulative baseline hazard is depicted in orange using the right y-axis, and the x-axis represents the time. It is noteworthy that the relationship between the two estimated functions is such that the slope of the cumulative baseline hazard function at each time point actually reflects the value of the baseline hazard function at that specific time point. The raw estimated cumulative baseline hazard function appears smoother than the estimated baseline hazard function. Now we are going to visualize the smoothed version of these two functions.
 
@@ -205,7 +205,7 @@ p <-
 p
 ```
 
-![](/Users/yonwang/Desktop/Baseline%20Hazard/Figure 2 (Smooth).jpeg)
+![](https://raw.githubusercontent.com/YzwIsALaity/Baseline-Hazard-Plot-Tutorial-in-R/256df4a29230228e7a0effc11944d042fd84a528/Figure%202%20(Smooth).jpeg)
 
 In the smoothed version, the estimated cumulative baseline hazard function monotonically increases, while the estimated baseline hazard function reflects the baseline risk of secondary viral infections when there are no factors adjusted for. The risk of getting a secondary viral infection in the environment decreases initially, increases in the second stage, and eventually decreases again approaching the end of the study period. Since this is simulated data, the estimated baseline risk may not truly reflect respiratory viral interference in the environment. Sometimes, this __estimated baseline risk can be verified by the smooth curve for the estimated incidence rate calculated from the same study__.
 
